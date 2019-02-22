@@ -1,0 +1,67 @@
+id: tensorflow-fadernetwork-train
+name: Tensorflow PGGAN training end2end
+docker-image: fadernetwork
+
+args:
+  - id: train-images-dir
+    help: 'path to dataset in png format'
+  - id: output-dir
+    help: 'path to store training results'
+  - id: train-attributes-file-dir
+    help: 'attributes txt file'
+  - id: num-iter
+    default: 1000
+    help: 'The number of steps used for training.'
+  - id: batch-size
+    default: 32
+  - id: img-width
+    default: 256
+  - id: img-height
+    help: 256
+  - id: img-depth
+    default: 3
+  - id: num-attr
+    default: 244
+  - id: max-epoch
+    default: 64
+  - id: num-train-images
+    help: 'Number of training images'
+  - id: steps
+    default: 10
+  - id: enc-size
+    default: 256
+  - id: dec-size
+    default: 256
+  - id: model
+    default: 'draw_attn'
+
+
+
+docker-volumes:
+  - host-path: "{output-dir}"
+    container-path: /media/ngv/results
+    read-only: False
+  - host-path: "{train-images-dir}"
+    container-path: /media/ngv/images
+  - host-path: "{train-attributes-file-dir}"
+    container-path: /root/Fader-Networks-Tensorflow/train_attr.txt
+
+# logfile-path: "{output-path}/e2e-training-logs.txt"
+
+command: |
+  python3 main.py
+    --num_iter {num-iter}
+    --batch_size {batch-size}
+    --img_width {img-width}
+    --img_height {img-height}
+    --img_depth {img-depth}
+    --num_attr {num-attr}
+    --max_epoch {max-epoch}
+    --num_train_images {num-train-images}
+    --steps {steps}
+    --enc_size {enc-size}
+    --dec_size {dec-size}
+    --model {model}
+    --train_images_dir /media/ngv/images
+    --train_attributes_file_dir /root/Fader-Networks-Tensorflow/train_attr.txt
+    --output_dir /media/ngv/results
